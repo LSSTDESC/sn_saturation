@@ -28,14 +28,12 @@
 
 \begin{document}
 
-\title{Write Title Here}
+\title{The impact of LSST saturation on SN cosmology}
 
 \maketitlepre
 
 \begin{abstract}
-
-  Write abstract here.
-
+We explore the impact of saturation on SN cosmology. In particular, we are interested in the effect of changing two equal timed snaps to a single snap in a visit. We find that the saturation effects are small at redshifts higher than 0.03.
 \end{abstract}
 
 % Keywords are ignored in the LSST DESC Note style:
@@ -45,116 +43,68 @@
 
 % ----------------------------------------------------------------------
 % {% raw %}
-
 \section{Introduction}
 \label{sec:intro}
-
-This is a paper and note template for the LSST DESC \citep{Overview,ScienceBook,WhitePaper}.
-You can delete all this tutorial text whenever you like.
-
-You can easily switch between various \LaTeX\xspace styles for internal notes and peer reviewed journals.
-Documents can be compiled using the provided \code{Makefile}.
-The command \code{make main} compiles \code{main.tex} using the  \code{desc-tex/styles/lsstdescnote.cls} style.
-If you want to upgrade your Note into a journal article, just choose a journal name, between \code{make apj} (ApJ preprint format), \code{make apjl} (which uses the \code{emulateapj} style), \code{make prd}, \code{make prl}, and \code{make mnras}.
-
+Survey strategy proposals frequently request that the default exposure time in LSST survey strategies
+of $30~s$ per telescope visit or pointing be comprised of a single snap (or exposure), rather than the current two snaps of $15~s.$ While this proposal has advanatages, a disadvantage in doubling the exposure time is the collection of twice the number of photons during an exposure. For bright objects, such as nearby, near maximum supernovae, this could be more than the number of photon counts in t. This could happen for low redshift supernovae resulting in some of the light curve points being missing due to saturation. We quickly look at the impact of this effect on SNIa cosmology.  
 
 % ----------------------------------------------------------------------
-
-\section{Commands}
-\label{sec:commands}
-
-There are a number of useful \LaTeX\xspace commands provided by \code{desc-tex}, which should be automatically downloaded when \code{make} is invoked.
-Notice that the section labels are prefixed with \code{sec:} to allow the use of the \verb=\secref= command to reference a section (\ie, \secref{intro}).
-Figures can be referenced with the \verb=\figref= command, which assumes that the figure label is prefixed with \code{fig:}.
-In \figref{example} we show an example figure.
-You'll notice that the actual figure file is found in the \code{figures} directory.
-However, because we have specified this directory in our \verb=\graphicspath= we do not need to explicitly specify the path to the image.
-
-The \code{desc-tex} macros also contain some conventional scientific units like \angstrom, \GeV, \Msun, etc. and some editorial tools for highlighting \FIXME{issues}, \CHECK{text to be checked}, \COMMENT{comments}, and \NEW{new additions}.
-
-
-% ----------------------------------------------------------------------
-
 \section{Methods}
 \label{sec:methods}
+To study the impact of saturation, the starting point is the assumption that the full well potential is 100,000
 
-Similar to the figure before, here we have included a table of data from \code{tables/table.tex}.
-Notice that again we are able to reference \tabref{example} with the \verb=\tabref= command using the \code{tab:} prefix.
-Also notice that we haven't needed to specify the full path to the table because in the \code{Makefile} we include \code{./tables} directory in the \code{\$TEXINPUTS} environment variable.
+We calculate the number of photons collected in a single pixel from the sky as well as from a point source. This is shown in \figref{fig:collected_photons}
+\begin{itemize}
+        \item We can calculate the number of photons collected (gain=1) from the magnitude in a band. This has been checked with using the lsst sims software. 
+        \item This will be spread across a number of pixels. We use the approximation of a single Gaussian profile to model the PSF. The FWHM for this is known in terms of the standard deviation. We use this to calculate the density of photons at the brightest pixel, and multiply by the area to get the number of photons collected in the brightest pixel. 
+        \item Given a sky brightness in mag/arc-sec, it is straightforward to calculate the number of photons from the sky collected. 
+    \end{itemize}
 
-\input{table}
-
-Equations appear as follows, and can be referred to as, for example, \eqnref{example} -- just as for tables, we use the \verb=\eqnref= command using the \code{eqn:} prefix.
-\begin{equation}
-  \label{eqn:example}
-  \langle f(k) \rangle = \frac{ \sum_{t=0}^{N}f(t,k) }{N}
-\end{equation}
+Note this ignores other sources of photons such as a host galaxy. 
 
 
-% ----------------------------------------------------------------------
-
+In the second case, we present the results from an SNAANA simulation based on the \verb minion_1016  opsim output. This includes contributions such as a host galaxy as well.
 \section{Results}
 \label{sec:results}
-
-\figref{example} shows an example figure, referred to with the \verb=\figref= command and the \code{fig:} prefix.
+\begin{figure}
+\includegraphics[width=0.9\columnwidth]{collected_photons}
+\caption{Left: The number of sky photons per LSST pixel as a function of the sky brightness in units of $\mathrm{mag/arc-sec^2}$ in different bands of LSST. The ranges of $m_{sky}$ in different bands cover the range in OpSim (kraken\_2026 ). Right: The number of source photons in the brightest pixel for a source as a function of the source brightness in magnitude, for LSST bands g and r for minimum and median FWHM of 0.7\label{fig:collected_photons}}
+\end{figure}
+Figure~\ref{fig:collected_photons} shows that the number of sky photons collected in each pixel of the CCD is small compared to the assumed full well potential of 100000. This is high only for z because there are observations in z and y for very bright conditions. However, at the same sky brightness the redder bands contain far less photons. It also shows that in g band the source photons alone become a problem only when this is brighter than 16 mags. However source, sky and background galaxy photons could become a problem later. 
 
 \begin{figure}
-\includegraphics[width=0.9\columnwidth]{example.png}
-\caption{An example figure: the LSST DESC logo, copied from \code{desc-tex/logos/desc-logo.png} into \code{figures/example.png}. \label{fig:example}}
+\includegraphics[width=0.9\columnwidth]{HubbleDiag}
+\caption{The magnitude of a source with intrinsic magnitude of -19.3 mags\label{fig:hubble}}
+\end{figure}
+In \figref{hubble}, we look at the magnitudes of a source of absolute magnitude -19.3 including only the effect of cosmological dimming. Combinining these, it would seem like saturation is not a problem at redshifts > 0.03, with the effects starting to show between 0.02 and 0.03.
+
+\begin{figure}
+    \includegraphics[width=0.4\columnwidth]{nobs_saturate_gt0}
+    \includegraphics[width=0.4\columnwidth]{nobs_saturate_gt1}
+    \caption{\textbf{Left:}~Histogram of SNIa (black) in an SNANA simulation based on minion\_1016, along with a histogram of SNIa (filled red) where at least one epoch was saturated as a function of magnitude at peak (lower) and redshift (upper) for 2 snaps (left column) and 1 snap (right column). \textbf{Right} Same but the filled red histogram is of SN with more than one epoch saturated. \label{fig:saturation_hist}}
 \end{figure}
 
-
-% ----------------------------------------------------------------------
-
+In Figure~\ref{fig:saturation_hist}, we include further possible contributions to the photon count. While this is slightly different from the previous plots, it also suggests that there is little problem at redshifts above 0.03. 
 \section{Discussion}
 \label{sec:discussion}
-
-If you are planning on committing your paper to GitHub, it's a good idea to write your tex as one sentence per line.
-This allows for an easier \code{diff} of changes.
-It also makes sense to think of latex as \emph{code}, and sentences as logical statements, occupying one line each.
-Each line must ``compile'' in the mind of the reader.
-
+We have heard elsewhere that a point source at LSST 17 mags might cause saturation. We can think about this later.
 
 % ----------------------------------------------------------------------
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-Here's a summary of what we just reported.
-
-We can draw the following well-organized and neatly-formatted conclusions:
-\begin{itemize}
-  \item This is important.
-  \item We can measure some number with some precision.
-  \item This has some implications.
-\end{itemize}
-
-Here are some parting thoughts.
-
+Saturation, even with a single 30 sec snap per visit likely does to have a problem till around z of 0.02-0.03. SNIa at redshifts greater than 0.03 seem largely unaffected by saturation.
 
 % ----------------------------------------------------------------------
 
 \subsection*{Acknowledgments}
 
-Here is where you should add your specific acknowledgments, remembering that some standard thanks will be added via the \code{desc-tex/ack/*.tex} and \code{contributions.tex} files.
-
-%This paper has undergone internal review in the LSST Dark Energy Science Collaboration. % REQUIRED if true
-
-\input{contributions} % Standard papers only: author contribution statements. For examples, see http://blogs.nature.com/nautilus/2007/11/post_12.html
-
-% This work used TBD kindly provided by Not-A-DESC Member and benefitted from comments by Another Non-DESC person.
-
+%\input{contributions} % Standard papers only: author contribution statements. For examples, see http://blogs.nature.com/nautilus/2007/11/post_12.html
 % Standard papers only: A.B.C. acknowledges support from grant 1234 from ...
 
 \input{desc-tex/ack/standard} % also available: key standard_short
 
-% This work used some telescope which is operated/funded by some agency or consortium or foundation ...
-
-% We acknowledge the use of An-External-Tool-like-NED-or-ADS.
-
-%{\it Facilities:} \facility{LSST}
-
-% Include both collaboration papers and external citations:
 \bibliography{main,desc-tex/bib/lsstdesc}
 
 \end{document}
